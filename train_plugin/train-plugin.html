@@ -112,5 +112,10 @@ An example web component that shows up as the content for a TensorBoard tab.
         });
       },
     });
+
+    tf_tensorboard.registerDashboard({
+      plugin: 'my-plugin',
+      elementName: 'train-dashboard',
+    });
   </script>
 </dom-module>

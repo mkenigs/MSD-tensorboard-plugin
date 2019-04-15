@@ -19,8 +19,8 @@ load("@org_tensorflow_tensorboard//tensorboard/defs:web.bzl", "tf_web_library")
 licenses(["notice"])  # Apache 2.0
 
 py_library(
-    name = "greeter_plugin",
-    srcs = ["greeter_plugin.py"],
+    name = "train_plugin",
+    srcs = ["train_plugin.py"],
     srcs_version = "PY2AND3",
     deps = [
         "@org_pocoo_werkzeug",
@@ -31,24 +31,12 @@ py_library(
     ],
 )
 
-py_binary(
-    name = "greeter_demo",
-    srcs = ["greeter_demo.py"],
-    srcs_version = "PY2AND3",
-    deps = [":greeter_summary"],
-)
-
-py_library(
-    name = "greeter_summary",
-    srcs = ["greeter_summary.py"],
-    srcs_version = "PY2AND3",
-)
-
 tf_web_library(
-    name = "greeter_dashboard",
+    name = "train_dashboard",
     srcs = [
         "greeter-card.html",
         "greeter-dashboard.html",
+        "greeter-plugin.html"
     ],
     path = "/greeter-plugin",
     deps = [

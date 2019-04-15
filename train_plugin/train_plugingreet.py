@@ -24,7 +24,7 @@ from werkzeug import wrappers
 from tensorboard.backend import http_util
 from tensorboard.plugins import base_plugin
 
-class GreeterPlugin(base_plugin.TBPlugin):
+class TrainPlugin(base_plugin.TBPlugin):
   """A plugin that serves greetings recorded during model runs."""
 
   # This static property will also be included within routes (URL paths)
