@@ -21,6 +21,9 @@ limitations under the License.
 <link rel="import" href="../tf-dashboard-common/tf-dashboard-layout.html">
 <link rel="import" href="../tf-runs-selector/tf-runs-selector.html">
 <link rel="import" href="../tf-tensorboard/registry.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../tf-dashboard-common/tf-multi-checkbox.html">
 
 <!--
 An example web component that shows up as the content for a TensorBoard tab.
@@ -32,21 +35,193 @@ An example web component that shows up as the content for a TensorBoard tab.
     <tf-dashboard-layout>
       <div class="sidebar">
         <div class="sidebar-section">
-          <tf-runs-selector selected-runs="{{_sel`ectedRuns}}">
+          <tf-runs-selector selected-runs="{{_selectedRuns}}">
           </tf-runs-selector>
+
+          <tf-multi-checkbox id="attrsCheckbox" names="[[sqlAttrs]]" ></tf-multi-checkbox>
         </div>
       </div>
       <div class="center">
         <p>
-          Hello World.
-        <p>
-          The backend says the time is <span class="time">[[time]]</span>.
+          Select attributes and train
+
+          <!-- <div id="outer-container" class="scrollbar">
+            <template is="dom-repeat" items="[[sqlAttrs]]">
+              <div class="name-row">
+                <div class="icon-container checkbox-container vertical-align-container">
+                  <paper-checkbox class="checkbox vertical-align-center" id$="checkbox-[[item]]" name="[[item]]"
+                    checked$="[[_isChecked(item, selectionState.*)]]" on-change="_checkboxChange"></paper-checkbox>
+
+                </div>
+                <div class="item-label-container">
+                  <span>[[item]]</span>
+                </div>
+              </div>
+            </template>
+          </div> -->
+
+          <!-- <tf-multi-checkbox id="attrsCheckbox" names="[[sqlAttrs]]" ></tf-multi-checkbox> -->
+
+          <tf-multi-checkbox
+          id="copiedCheckbox"
+          names="[[runs]]"
+          selection-state="{{runSelectionState}}"
+          out-selected="{{selectedRuns}}"
+          regex="{{regexInput}}"
+          coloring="[[coloring]]"
+        ></tf-multi-checkbox>
+
+          <paper-button class="x-button" id="train-button" on-tap="_train">
+            Train
+          </paper-button>
+
+
+          <paper-spinner-lite active class="spinner" id="loading-spinner" hidden="[[!_isTraining]]">
+          </paper-spinner-lite>
+
       </div>
+
+
+
     </tf-dashboard-layout>
     <style include="dashboard-style"></style>
     <style>
-      .time {
-        font-weight: bold;
+      tf-multi-checkbox {
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+      }
+
+      .x-button {
+        font-size: 13px;
+        background-color: var(--tb-ui-light-accent);
+        color: var(--tb-ui-dark-accent);
+      }
+
+      paper-button {
+        margin-left: 0;
+      }
+
+      :host .spinner {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      paper-input {
+        --paper-input-container-focus-color: var(--tb-orange-strong);
+
+        --paper-input-container-input: {
+          font-size: 14px;
+        }
+
+        ;
+
+        --paper-input-container-label: {
+          font-size: 14px;
+        }
+
+        ;
+      }
+
+      :host {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      #outer-container {
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 100%;
+        height: 0;
+        /* Quirk to make firefox add scrolling instead of expand div */
+        flex-grow: 1;
+        flex-shrink: 1;
+        word-wrap: break-word;
+      }
+
+      .name-row {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        font-size: 13px;
+        word-break: break-all;
+        /* makes wrapping of hyperparam strings better */
+      }
+
+      .icon-container {
+        flex-grow: 0;
+        flex-shrink: 0;
+        padding-left: 2px;
+      }
+
+      .checkbox {
+        padding-left: 2px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .isolator {
+        width: 18px;
+        height: 18px;
+        padding: 0px;
+      }
+
+      .isolator-container {
+        padding-left: 6px;
+        padding-right: 3px;
+      }
+
+      .checkbox-container {
+        padding-left: 2px;
+      }
+
+      .item-label-container {
+        padding-left: 5px;
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: 0px;
+        /* hack to get the flex-grow to work properly */
+      }
+
+      .tooltip-value-container {
+        display: flex;
+        justify-content: center;
+        flex-grow: 0;
+        flex-shrink: 0;
+        text-align: right;
+        padding-left: 2px;
+      }
+
+      .vertical-align-container {
+        display: flex;
+        justify-content: center;
+      }
+
+      .vertical-align-container .vertical-align-center {
+        align-self: center;
+      }
+
+      .vertical-align-container .vertical-align-top {
+        align-self: start;
       }
     </style>
   </template>
@@ -54,13 +229,27 @@ An example web component that shows up as the content for a TensorBoard tab.
     Polymer({
       is: 'train-dashboard',
       properties: {
+        _isTraining: {
+          type: Boolean,
+          value: false,
+        },
 
-        /**
-         * Formatted string of current time.
-         */
-        time: {
-          type: String,
-          value: 'unknown',
+
+        names: ['one', 'two', 'three'],
+        _tooltips: ['one', 'two', 'three'],
+        highlights: ['one', 'two', 'three'],
+
+        sqlAttrs: {
+          type: Array,
+          value: () => ['one', 'two', 'uniqueword'],
+        },
+        tooltips: {
+          type: Array,
+          value: () => ['one', 'two', 'three'],
+        },
+        highlights: {
+          type: Array,
+          value: () => ['one', 'two', 'three'],
         },
 
         /**
@@ -90,7 +279,126 @@ An example web component that shows up as the content for a TensorBoard tab.
          * @type {!Array<string>}
          */
         _selectedRuns: Array,
+      // },
+
+
+
+
+
+
+
+
+
+
+
+      // properties: {
+      runSelectionState: {
+        type: Object,
+        observer: '_storeRunSelectionState',
+        value: tf_storage.getObjectInitializer('runSelectionState', {defaultValue: {}}),
       },
+      regexInput: {
+        type: String,
+        value:
+            tf_storage.getStringInitializer('regexInput', {defaultValue: ''}),
+        observer: '_regexObserver',
+      },
+      selectedRuns: {
+        type: Array,
+        notify: true,
+      },
+      // runs: an array of strings, representing the run names that may be chosen
+      runs: Array,
+      dataLocation: {
+        type: String,
+        notify: true,
+      },
+      // This is the potentially clipped portion of the dataLocation we show at the bottom of the sidebar.
+      _clippedDataLocation: {
+        type: String,
+        computed: '_getClippedDataLocation(dataLocation, _dataLocationClipLength)',
+      },
+      _dataLocationClipLength: {
+        type: Number,
+        value: 250,
+        readOnly: true,
+      },
+      coloring: {
+        type: Object,
+        value: {
+          getColor: tf_color_scale.runsColorScale,
+        },
+      },
+    },
+    attached() {
+      this._runStoreListener = tf_backend.runsStore.addListener(() => {
+        this.set('runs', tf_backend.runsStore.getRuns());
+      });
+      this.set('runs', tf_backend.runsStore.getRuns());
+
+      this._envStoreListener = tf_backend.environmentStore.addListener(() => {
+        this.set('dataLocation', tf_backend.environmentStore.getDataLocation());
+      });
+      this.set('dataLocation', tf_backend.environmentStore.getDataLocation());
+    },
+    detached() {
+      tf_backend.runsStore.removeListenerByKey(this._runStoreListener);
+      tf_backend.environmentStore.removeListenerByKey(this._envStoreListener);
+    },
+    _toggleAll: function() {
+      this.$.multiCheckbox.toggleAll();
+    },
+    // Break the string at natural points, including commas, equals, and slashes
+    _breakString: function(originalString) {
+      return originalString.replace(/([\/=\-_,])/g, "$1<wbr>");
+    },
+    _getClippedDataLocation: function(dataLocation, dataLocationClipLength) {
+      if (dataLocation === undefined) {
+        // The dataLocation has not been set yet.
+        return undefined;
+      }
+
+      if (dataLocation.length > dataLocationClipLength) {
+        // Clip the dataLocation to avoid blocking the runs selector. Let the
+        // user view a more full version of the dataLocation.
+        return this._breakString(dataLocation.substring(0, dataLocationClipLength));
+      } else {
+        return this._breakString(dataLocation);
+      }
+    },
+    _openDataLocationDialog: function(event) {
+      event.preventDefault();
+      this.$$('#data-location-dialog').open();
+    },
+    _shouldShowExpandDataLocationButton(dataLocation, _dataLocationClipLength) {
+      return dataLocation && dataLocation.length > _dataLocationClipLength;
+    },
+    _storeRunSelectionState:
+        tf_storage.getObjectObserver('runSelectionState', {defaultValue: {}}),
+    _regexObserver:
+        tf_storage.getStringObserver('regexInput', {defaultValue: ''}),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       /**
        * Initializes web component.
@@ -107,11 +415,31 @@ An example web component that shows up as the content for a TensorBoard tab.
        * This method is called by tf-tensorboard when the reload timer fires.
        */
       reload() {
-        const url = tf_backend.getRouter().pluginRoute('train', '/time');
+        // this.set('sqlAttrs', tf_backend.runsStore.getRuns());
+      },
+
+      _train: function () {
+        // if _isTraining return?
+        this.set('_isTraining', true);
+
+        const url = tf_backend.getRouter().pluginRoute('train', '/train');
         this._requestManager.request(url).then(response => {
-          this.set('time', response['time']);
+          this.set('_isTraining', false);
         });
       },
+
+
+      // _checkboxChange: function (e) {
+      //   var target = (Polymer.dom(e)).localTarget;
+      //   const newSelectionState = _.clone(this.selectionState);
+      //   newSelectionState[target.name] = target.checked;
+      //   // n.b. notifyPath won't work because names may have periods.
+      //   this.selectionState = newSelectionState;
+      // },
+
+      // _isChecked: function (item, outSelectedChange) {
+      //   return this.outSelected.indexOf(item) != -1;
+      // }
     });
 
     tf_tensorboard.registerDashboard({

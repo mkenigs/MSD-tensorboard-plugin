@@ -55,7 +55,7 @@ class TrainPlugin(base_plugin.TBPlugin):
     # Note that the methods handling routes are decorated with
     # @wrappers.Request.application.
     return {
-      '/time': self.time_route,
+      '/train': self.train_route,
         # '/tags': self.tags_route,
         # '/greetings': self.greetings_route,
     }
@@ -71,6 +71,6 @@ class TrainPlugin(base_plugin.TBPlugin):
     return True
 
   @wrappers.Request.application
-  def time_route(self, request):
-    response = {'time': 13}
-    return http_util.Respond(request, response, 'application/json')
+  def train_route(self, request):
+
+    return http_util.Respond(request, {}, 'application/json')

@@ -34,13 +34,16 @@ py_library(
 tf_web_library(
     name = "train_dashboard",
     srcs = [
-        "train-dashboard.html"
+        "train-dashboard.html",
+        "tf-multi-checkbox-demo.html"
     ],
     path = "/train-plugin",
     deps = [
         "@org_polymer_iron_icon",
         "@org_polymer_paper_icon_button",
         "@org_polymer_paper_input",
+        "@org_polymer_paper_button",
+        "@org_polymer_paper_spinner",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_backend",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_card_heading",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_categorization_utils",
