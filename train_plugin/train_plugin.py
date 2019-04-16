@@ -20,6 +20,7 @@ import tensorflow as tf
 import numpy as np
 import six
 from werkzeug import wrappers
+import time
 
 from tensorboard.backend import http_util
 from tensorboard.plugins import base_plugin
@@ -72,5 +73,5 @@ class TrainPlugin(base_plugin.TBPlugin):
 
   @wrappers.Request.application
   def train_route(self, request):
-
+    time.sleep(1)
     return http_util.Respond(request, {}, 'application/json')

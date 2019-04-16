@@ -35,7 +35,8 @@ tf_web_library(
     name = "train_dashboard",
     srcs = [
         "train-dashboard.html",
-        "tf-multi-checkbox-demo.html"
+        "train-inputs.html",
+        "train-inputs.ts",
     ],
     path = "/train-plugin",
     deps = [
@@ -44,6 +45,7 @@ tf_web_library(
         "@org_polymer_paper_input",
         "@org_polymer_paper_button",
         "@org_polymer_paper_spinner",
+        "@org_polymer_paper_slider",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_backend",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_card_heading",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_categorization_utils",
@@ -54,5 +56,9 @@ tf_web_library(
         "@org_tensorflow_tensorboard//tensorboard/components/tf_paginated_view",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_runs_selector",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_tensorboard:registry",
+
+        "@org_polymer_iron_icons",
+        "@org_polymer_paper_checkbox",
+        "@org_tensorflow_tensorboard//tensorboard/components/tf_storage:tf_storage",
     ],
 )
