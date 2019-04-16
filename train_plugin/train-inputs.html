@@ -60,17 +60,17 @@ handle these situations gracefully.
             <paper-icon-button icon="radio-button-unchecked" class="isolator vertical-align-center"
               on-tap="_isolateName" name="[[item]]"></paper-icon-button>
           </div>
-          <div class="item-label-container">
+          <div class="icon-container isolator-container vertical-align-container item-label-container">
             <span>[[item]]</span>
           </div>
-          <div class="slider-one-container">
-            <paper-slider min="10" max="100" snaps step="10" value="{{childrenCount}}" editable>
+          <!-- <div class="icon-container isolator-container vertical-align-container">
+            <paper-slider min="10" max="100" snaps step="10" value="{{childrenCountOne}}" editable>
             </paper-slider>
           </div>
-          <div class="slider-two-container">
-              <paper-slider min="10" max="100" snaps step="10" value="{{childrenCount}}" editable>
-              </paper-slider>
-            </div>
+          <div class="icon-container isolator-container vertical-align-container">
+            <paper-slider min="10" max="100" snaps step="10" value="{{childrenCountTwo}}" editable>
+            </paper-slider>
+          </div> -->
         </div>
       </template>
     </div>
@@ -145,12 +145,17 @@ handle these situations gracefully.
         padding-left: 2px;
       }
 
-      .item-label-container {
+      /* .item-label-container {
         padding-left: 5px;
         flex-grow: 1;
         flex-shrink: 1;
         width: 0px;
         /* hack to get the flex-grow to work properly */
+      /*} */
+
+      .item-label-container {
+/* margin-right: 5%;
+margin-left: 5% */
       }
 
       .tooltip-value-container {

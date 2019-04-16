@@ -42,14 +42,7 @@ An example web component that shows up as the content for a TensorBoard tab.
       <div class="center">
         <p>Select attributes to train with:</p>
 
-        <train-inputs names="[[sqlAttrs]]"></train-inputs>
-        <!-- <div id="attrInputs">
-          <tf-multi-checkbox id="attrsCheckbox" names="[[sqlAttrs]]"></tf-multi-checkbox>
-           coloring="[[coloring]]"
-          <paper-slider min="10" max="100" snaps step="10" value="{{childrenCount}}" editable>
-          <paper-slider min="10" max="100" snaps step="10" value="{{childrenCount}}" editable>
-          </paper-slider>
-        </div> -->
+        <train-inputs id="attrsInputs" names="[[sqlAttrs]]"></train-inputs>
         <div>
           <paper-button class="x-button" id="train-button" on-tap="_train">
             Train
@@ -92,7 +85,7 @@ An example web component that shows up as the content for a TensorBoard tab.
       .center {
         box-sizing: border-box;
         display: flex;
-        height: auto;
+        height: 30%;
         flex-direction: column;
         margin-right: 20px;
         overflow-x: hidden;
@@ -113,7 +106,7 @@ An example web component that shows up as the content for a TensorBoard tab.
 
         sqlAttrs: {
           type: Array,
-          value: ['one', 'two', 'three'],
+          value: ['Time signature', 'Tempo', 'Artist familiarity', 'Song hotness', 'Duration', 'Words'],
         },
 
         // coloring: {
@@ -146,7 +139,7 @@ An example web component that shows up as the content for a TensorBoard tab.
          *
          * This field is updated by tf-runs-selector automatically.
          *
-         * @type {!Array<string>}
+         * @type {!Array<string>} 
          */
         _selectedRuns: Array,
       },
