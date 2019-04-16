@@ -30,7 +30,7 @@ class TrainPlugin(base_plugin.TBPlugin):
   # This static property will also be included within routes (URL paths)
   # offered by this plugin. This property must uniquely identify this plugin
   # from all other plugins.
-  plugin_name = 'my-plugin'
+  plugin_name = 'train'
 
   def __init__(self, context):
     """Instantiates a TrainPlugin.
@@ -55,6 +55,7 @@ class TrainPlugin(base_plugin.TBPlugin):
     # Note that the methods handling routes are decorated with
     # @wrappers.Request.application.
     return {
+      '/time': self.time_route,
         # '/tags': self.tags_route,
         # '/greetings': self.greetings_route,
     }
@@ -68,3 +69,8 @@ class TrainPlugin(base_plugin.TBPlugin):
       Whether this plugin is active.
     """
     return True
+
+  @wrappers.Request.application
+  def time_route(self, request):
+    response = {'time': 13}
+    return http_util.Respond(request, response, 'application/json')

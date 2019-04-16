@@ -20,18 +20,19 @@ limitations under the License.
 <link rel="import" href="../tf-dashboard-common/dashboard-style.html">
 <link rel="import" href="../tf-dashboard-common/tf-dashboard-layout.html">
 <link rel="import" href="../tf-runs-selector/tf-runs-selector.html">
+<link rel="import" href="../tf-tensorboard/registry.html">
 
 <!--
 An example web component that shows up as the content for a TensorBoard tab.
 
 @element my-plugin
 -->
-<dom-module id="my-plugin">
+<dom-module id="train-dashboard">
   <template>
     <tf-dashboard-layout>
       <div class="sidebar">
         <div class="sidebar-section">
-          <tf-runs-selector selected-runs="{{_selectedRuns}}">
+          <tf-runs-selector selected-runs="{{_sel`ectedRuns}}">
           </tf-runs-selector>
         </div>
       </div>
@@ -51,7 +52,7 @@ An example web component that shows up as the content for a TensorBoard tab.
   </template>
   <script>
     Polymer({
-      is: 'my-plugin',
+      is: 'train-dashboard',
       properties: {
 
         /**
@@ -106,7 +107,7 @@ An example web component that shows up as the content for a TensorBoard tab.
        * This method is called by tf-tensorboard when the reload timer fires.
        */
       reload() {
-        const url = tf_backend.getRouter().pluginRoute('my-plugin', '/time');
+        const url = tf_backend.getRouter().pluginRoute('train', '/time');
         this._requestManager.request(url).then(response => {
           this.set('time', response['time']);
         });
@@ -114,7 +115,7 @@ An example web component that shows up as the content for a TensorBoard tab.
     });
 
     tf_tensorboard.registerDashboard({
-      plugin: 'my-plugin',
+      plugin: 'train',
       elementName: 'train-dashboard',
     });
   </script>

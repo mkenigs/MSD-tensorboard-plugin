@@ -23,7 +23,7 @@ from tensorboard import default
 from tensorboard import program
 import tensorflow as tf
 
-from greeter_plugin import train_plugin
+from train_plugin import train_plugin
 
 
 if __name__ == '__main__':

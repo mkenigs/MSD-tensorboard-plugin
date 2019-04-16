@@ -34,11 +34,9 @@ py_library(
 tf_web_library(
     name = "train_dashboard",
     srcs = [
-        "greeter-card.html",
-        "greeter-dashboard.html",
-        "greeter-plugin.html"
+        "train-dashboard.html"
     ],
-    path = "/greeter-plugin",
+    path = "/train-plugin",
     deps = [
         "@org_polymer_iron_icon",
         "@org_polymer_paper_icon_button",
